@@ -1,0 +1,431 @@
+{% extends "base.html" %}
+
+{% block title %}
+<title>學生資料管理系統 - 首頁</title>
+<style>
+    :root {
+        --primary: #2563eb;
+        --primary-soft: #dbeafe;
+        --primary-strong: #1d4ed8;
+        --border: #e5e7eb;
+        --danger: #ef4444;
+        --text-main: #111827;
+        --text-sub: #6b7280;
+        --bg: #f3f4f6;
+    }
+
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background: radial-gradient(circle at top, #e0f2fe 0, #f3f4f6 38%, #f9fafb 100%);
+        color: var(--text-main);
+        margin: 0;
+        padding: 24px 12px 48px;
+    }
+
+    .page-wrapper {
+        max-width: 1100px;
+        margin: 0 auto;
+    }
+
+    .page-header {
+        text-align: center;
+        margin-bottom: 24px;
+    }
+
+    .page-header h1 {
+        font-size: 28px;
+        margin: 0 0 8px;
+        letter-spacing: 0.04em;
+    }
+
+    .page-header p {
+        margin: 0;
+        font-size: 14px;
+        color: var(--text-sub);
+    }
+
+    .toolbar-card {
+        background: #ffffff;
+        border-radius: 16px;
+        box-shadow: 0 14px 34px rgba(15, 23, 42, 0.16);
+        padding: 18px 22px 20px;
+        margin-bottom: 20px;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+    }
+
+    .toolbar-left {
+        font-size: 15px;
+        color: var(--text-sub);
+    }
+
+    .toolbar-left strong {
+        font-size: 18px;
+        color: var(--primary-strong);
+        margin: 0 4px;
+    }
+
+    .btn-primary {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        padding: 8px 16px;
+        border-radius: 999px;
+        border: none;
+        background: var(--primary);
+        color: #ffffff;
+        font-size: 14px;
+        font-weight: 500;
+        text-decoration: none;
+        box-shadow: 0 10px 24px rgba(37, 99, 235, 0.35);
+        cursor: pointer;
+        transition: transform 0.12s ease, box-shadow 0.12s ease, background-color 0.15s ease;
+        white-space: nowrap;
+    }
+
+    .btn-primary::before {
+        content: "+";
+        font-weight: 700;
+        font-size: 16px;
+    }
+
+    .btn-primary:hover {
+        background: var(--primary-strong);
+        transform: translateY(-1px);
+        box-shadow: 0 12px 28px rgba(37, 99, 235, 0.45);
+    }
+
+    .search-form {
+        width: 100%;
+        max-width: 420px;
+        margin: 0 auto 6px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .search-form label {
+        font-size: 14px;
+        color: var(--text-sub);
+        white-space: nowrap;
+    }
+
+    .search-input {
+        flex: 1;
+        padding: 8px 10px;
+        border-radius: 999px;
+        border: 1px solid var(--border);
+        font-size: 14px;
+        outline: none;
+        transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+        background-color: #f9fafb;
+    }
+
+    .search-input:focus {
+        border-color: var(--primary);
+        background-color: #ffffff;
+        box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.18);
+    }
+
+    .search-btn {
+        padding: 8px 16px;
+        border-radius: 999px;
+        border: none;
+        background: var(--primary-soft);
+        color: var(--primary-strong);
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        white-space: nowrap;
+        transition: background-color 0.15s ease, transform 0.12s ease, box-shadow 0.12s ease;
+    }
+
+    .search-btn:hover {
+        background: #bfdbfe;
+        transform: translateY(-1px);
+        box-shadow: 0 6px 18px rgba(37, 99, 235, 0.25);
+    }
+
+    .search-hint {
+        text-align: center;
+        font-size: 12px;
+        color: var(--text-sub);
+        margin: 0;
+    }
+
+    .table-card {
+        background: #ffffff;
+        border-radius: 16px;
+        box-shadow: 0 14px 34px rgba(15, 23, 42, 0.16);
+        padding: 14px 0 6px;
+        overflow: hidden;
+    }
+
+    .table-wrapper {
+        width: 100%;
+        overflow-x: auto;
+    }
+
+    table.student-table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 800px;
+        font-size: 14px;
+    }
+
+    .student-table thead {
+        background: linear-gradient(90deg, #2563eb, #1d4ed8);
+    }
+
+    .student-table th {
+        color: #ffffff;
+        padding: 10px 10px;
+        text-align: center;
+        white-space: nowrap;
+    }
+
+    .student-table td {
+        padding: 9px 10px;
+        border-bottom: 1px solid #e5e7eb;
+        text-align: center;
+    }
+
+    .student-table tr:nth-child(even) td {
+        background: #f9fafb;
+    }
+
+    .student-table tr:hover td {
+        background: #eef2ff;
+    }
+
+    .student-table td:nth-child(2) {
+        font-weight: 500;
+        text-align: left;
+    }
+
+    .tag-sex {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2px 8px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 500;
+    }
+
+    .tag-sex.male {
+        background: #dbeafe;
+        color: #1d4ed8;
+    }
+
+    .tag-sex.female {
+        background: #fee2e2;
+        color: #b91c1c;
+    }
+
+    a {
+        color: #2563eb;
+        text-decoration: none;
+    }
+
+    a:hover {
+        text-decoration: underline;
+    }
+
+    .actions-link {
+        font-size: 13px;
+        white-space: nowrap;
+    }
+
+    .actions-link a {
+        margin: 0 4px;
+    }
+
+    .actions-link a:first-child {
+        margin-left: 0;
+    }
+
+    .actions-link a:last-child {
+        margin-right: 0;
+    }
+
+    .pagination {
+        text-align: center;
+        margin: 16px 0 8px;
+    }
+
+    .pagination a,
+    .pagination strong {
+        display: inline-block;
+        min-width: 30px;
+        padding: 5px 8px;
+        margin: 0 3px;
+        font-size: 13px;
+        border-radius: 999px;
+        border: 1px solid transparent;
+    }
+
+    .pagination a {
+        color: #2563eb;
+        border-color: transparent;
+        background: transparent;
+        text-decoration: none;
+        transition: background-color 0.12s ease, border-color 0.12s ease, transform 0.1s ease;
+    }
+
+    .pagination a:hover {
+        background: #e0ecff;
+        border-color: #bfdbfe;
+        transform: translateY(-1px);
+    }
+
+    .pagination strong {
+        background: #2563eb;
+        color: #ffffff;
+        border-color: #1d4ed8;
+    }
+
+    .empty-message {
+        text-align: center;
+        padding: 40px 16px 10px;
+        color: var(--text-sub);
+        font-size: 15px;
+    }
+
+    .empty-message strong {
+        color: var(--danger);
+    }
+
+    @media (max-width: 768px) {
+        body {
+            padding: 16px 10px 32px;
+        }
+
+        .toolbar-card {
+            padding: 14px 14px 16px;
+            border-radius: 14px;
+        }
+
+        .page-header h1 {
+            font-size: 22px;
+        }
+
+        table.student-table {
+            min-width: 720px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-wrapper">
+    <div class="page-header">
+        <h1>學生資料管理系統</h1>
+        {% comment %} <p>瀏覽、搜尋與管理學生基本資料</p> {% endcomment %}
+    </div>
+
+    <div class="toolbar-card">
+        <div class="toolbar-left">
+            目前的資料筆數：<strong>{{ data_count }}</strong>
+        </div>
+        <a href="/post/" class="btn-primary">新增學生資料</a>
+        {# 若有 URL name，可改為：href="{% url 'post' %}" #}
+    </div>
+
+    <form action="/index/" method="get" class="search-form">
+        {% csrf_token %}
+        <label for="site_search">搜尋關鍵字</label>
+        <input
+            type="search"
+            id="site_search"
+            name="site_search"
+            class="search-input"
+            placeholder="可輸入姓名、學號、信箱等…"
+            value="{{ site_search|default_if_none:'' }}"
+        >
+        <button type="submit" class="search-btn">搜尋</button>
+    </form>
+    <p class="search-hint">
+        {% if site_search %}
+            目前搜尋條件：<strong>{{ site_search }}</strong>
+        {% else %}
+            不輸入關鍵字直接搜尋，可顯示全部資料。
+        {% endif %}
+    </p>
+
+    <div class="table-card">
+        {% if status %}
+            <div class="table-wrapper">
+                <table class="student-table">
+                    <thead>
+                        <tr>
+                            <th>學號</th>
+                            <th>姓名</th>
+                            <th>性別</th>
+                            <th>生日</th>
+                            <th>信箱</th>
+                            <th>電話</th>
+                            <th>地址</th>
+                            <th>編輯</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for data in page_obj %}
+                        <tr>
+                            <td>{{ data.cID }}</td>
+                            <td>{{ data.cName }}</td>
+                            <td>
+                                {% if data.cSex == "M" %}
+                                    <span class="tag-sex male">男</span>
+                                {% else %}
+                                    <span class="tag-sex female">女</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ data.cBirthday|date:'Y-m-d' }}</td>
+                            <td>{{ data.cEmail }}</td>
+                            <td>{{ data.cPhone }}</td>
+                            <td>{{ data.cAddr }}</td>
+                            <td class="actions-link">
+                                <a href="/edit/{{ data.cID }}/">編輯</a>|
+                                <a href="/delete/{{ data.cID }}/">刪除</a>
+                                {# 可視情況改為 url name，如：{% url 'edit' data.cID %} #}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="pagination">
+                {% if page_obj.has_previous %}
+                    <a href="?page=1{% if site_search %}&site_search={{ site_search }}{% endif %}">最前頁</a>
+                    <a href="?page={{ page_obj.previous_page_number }}{% if site_search %}&site_search={{ site_search }}{% endif %}">上一頁</a>
+                {% endif %}
+
+                {% for num in page_obj.paginator.page_range %}
+                    {% if page_obj.number == num %}
+                        <strong>{{ num }}</strong>
+                    {% else %}
+                        <a href="?page={{ num }}{% if site_search %}&site_search={{ site_search }}{% endif %}">{{ num }}</a>
+                    {% endif %}
+                {% endfor %}
+
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}{% if site_search %}&site_search={{ site_search }}{% endif %}">下一頁</a>
+                    <a href="?page={{ page_obj.paginator.num_pages }}{% if site_search %}&site_search={{ site_search }}{% endif %}">最後頁</a>
+                {% endif %}
+            </div>
+        {% else %}
+            <div class="empty-message">
+                <p><strong>{{ errormessage }}</strong></p>
+                <p>您可以點擊右上方「新增學生資料」來建立第一筆資料。</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+

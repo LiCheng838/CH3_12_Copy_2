@@ -1,0 +1,352 @@
+{% extends "base.html" %}
+
+{% block title %}
+<title>學生資料管理系統 - 新增資料</title>
+<style>
+    :root {
+        --primary: #2563eb;
+        --primary-light: #dbeafe;
+        --primary-strong: #1d4ed8;
+        --border: #e5e7eb;
+        --danger: #ef4444;
+        --text-main: #111827;
+        --text-sub: #6b7280;
+        --bg: #f3f4f6;
+    }
+
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background: radial-gradient(circle at top, #e0f2fe 0, #f3f4f6 38%, #f9fafb 100%);
+        color: var(--text-main);
+        margin: 0;
+        padding: 24px 12px 48px;
+    }
+
+    .page-wrapper {
+        max-width: 720px;
+        margin: 0 auto;
+    }
+
+    .card {
+        background: #ffffff;
+        border-radius: 16px;
+        box-shadow: 0 18px 45px rgba(15, 23, 42, 0.12);
+        padding: 28px 32px 32px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .card::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(circle at top right, rgba(37, 99, 235, 0.18), transparent 60%);
+        opacity: 0.6;
+        pointer-events: none;
+    }
+
+    .card-inner {
+        position: relative;
+        z-index: 1;
+    }
+
+    .page-title {
+        font-size: 24px;
+        font-weight: 700;
+        text-align: center;
+        margin-bottom: 6px;
+        letter-spacing: 0.03em;
+    }
+
+    .page-subtitle {
+        text-align: center;
+        font-size: 14px;
+        color: var(--text-sub);
+        margin-bottom: 20px;
+    }
+
+    .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 14px;
+        color: var(--primary);
+        text-decoration: none;
+        margin-bottom: 18px;
+        padding: 4px 0;
+        border-radius: 999px;
+        transition: 0.18s ease;
+    }
+
+    .back-link::before {
+        content: "←";
+        font-size: 13px;
+    }
+
+    .back-link:hover {
+        color: var(--primary-strong);
+        transform: translateX(-1px);
+    }
+
+    .required-note {
+        font-size: 12px;
+        color: var(--danger);
+        text-align: right;
+        margin-bottom: 10px;
+    }
+
+    .form-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        border-radius: 12px;
+        overflow: hidden;
+        border: 1px solid var(--border);
+        background: #ffffff;
+    }
+
+    .form-table th,
+    .form-table td {
+        padding: 10px 12px;
+        font-size: 14px;
+        vertical-align: middle;
+    }
+
+    .form-table tr:nth-child(even) {
+        background-color: #f9fafb;
+    }
+
+    .form-table th {
+        width: 120px;
+        text-align: right;
+        font-weight: 600;
+        color: var(--text-sub);
+        background: #f3f4f6;
+        border-right: 1px solid var(--border);
+    }
+
+    .form-table td {
+        border-top: 1px solid var(--border);
+    }
+
+    .form-table tr:first-child td {
+        border-top: none;
+    }
+
+    .form-table th span.required {
+        color: var(--danger);
+        margin-right: 4px;
+    }
+
+    .form-input,
+    .form-input[type="date"],
+    .form-input[type="email"] {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 8px 10px;
+        font-size: 14px;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+        outline: none;
+        transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+        background-color: #f9fafb;
+    }
+
+    .form-input:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.18);
+        background-color: #ffffff;
+    }
+
+    .radio-group {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        font-size: 14px;
+    }
+
+    .radio-item {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+    }
+
+    .radio-item input[type="radio"] {
+        accent-color: var(--primary);
+    }
+
+    .form-actions {
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+        margin-top: 18px;
+    }
+
+    .btn {
+        min-width: 90px;
+        padding: 7px 18px;
+        border-radius: 999px;
+        border: 1px solid transparent;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: transform 0.12s ease, box-shadow 0.12s ease, background-color 0.15s ease, border-color 0.15s ease;
+    }
+
+    .btn-primary {
+        background: var(--primary);
+        color: #ffffff;
+        box-shadow: 0 10px 20px rgba(37, 99, 235, 0.32);
+    }
+
+    .btn-primary:hover {
+        background: var(--primary-strong);
+        transform: translateY(-1px);
+        box-shadow: 0 12px 26px rgba(37, 99, 235, 0.38);
+    }
+
+    .btn-secondary {
+        background: #ffffff;
+        color: var(--text-main);
+        border-color: var(--border);
+    }
+
+    .btn-secondary:hover {
+        background: #f9fafb;
+        transform: translateY(-1px);
+        box-shadow: 0 6px 16px rgba(15, 23, 42, 0.12);
+    }
+
+    @media (max-width: 600px) {
+        body {
+            padding: 16px 10px 32px;
+        }
+
+        .card {
+            padding: 20px 18px 24px;
+            border-radius: 14px;
+        }
+
+        .form-table th {
+            width: 90px;
+            font-size: 13px;
+        }
+
+        .form-table th,
+        .form-table td {
+            padding: 8px 8px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-wrapper">
+    <div class="card">
+        <div class="card-inner">
+            <h1 class="page-title">學生資料管理系統</h1>
+            <p class="page-subtitle">新增學生基本資料</p>
+
+            <a href="/index/" class="back-link">回首頁</a>
+            {# 若有設定 URL name，可改為：href="{% url 'index' %}" #}
+
+            <p class="required-note">＊為必填欄位</p>
+
+            <form action="/post/" method="post">
+                {% csrf_token %}
+                <table class="form-table">
+                    <tr>
+                        <th><span class="required">＊</span>姓名</th>
+                        <td>
+                            <input
+                                type="text"
+                                id="cName"
+                                name="cName"
+                                class="form-input"
+                                required
+                            >
+                        </td>
+                    </tr>
+                    <tr>
+                        <th><span class="required">＊</span>性別</th>
+                        <td>
+                            <div class="radio-group">
+                                <label class="radio-item" for="cSexM">
+                                    <input
+                                        type="radio"
+                                        id="cSexM"
+                                        name="cSex"
+                                        value="M"
+                                        checked
+                                    >
+                                    <span>男</span>
+                                </label>
+                                <label class="radio-item" for="cSexF">
+                                    <input
+                                        type="radio"
+                                        id="cSexF"
+                                        name="cSex"
+                                        value="F"
+                                    >
+                                    <span>女</span>
+                                </label>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th><span class="required">＊</span>生日</th>
+                        <td>
+                            <input
+                                type="date"
+                                id="cBirthday"
+                                name="cBirthday"
+                                class="form-input"
+                                required
+                            >
+                        </td>
+                    </tr>
+                    <tr>
+                        <th><span class="required">＊</span>信箱</th>
+                        <td>
+                            <input
+                                type="email"
+                                id="cEmail"
+                                name="cEmail"
+                                class="form-input"
+                                required
+                            >
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>電話</th>
+                        <td>
+                            <input
+                                type="text"
+                                id="cPhone"
+                                name="cPhone"
+                                class="form-input"
+                            >
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>地址</th>
+                        <td>
+                            <input
+                                type="text"
+                                id="cAddr"
+                                name="cAddr"
+                                class="form-input"
+                            >
+                        </td>
+                    </tr>
+                </table>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">儲存資料</button>
+                    <button type="reset" class="btn btn-secondary">清除重填</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

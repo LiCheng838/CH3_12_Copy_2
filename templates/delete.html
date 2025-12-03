@@ -1,0 +1,299 @@
+{% extends "base.html" %}
+
+{% block title %}
+<title>學生資料管理系統 - 刪除資料</title>
+<style>
+    :root {
+        --primary: #2563eb;
+        --primary-light: #dbeafe;
+        --danger: #ef4444;
+        --danger-soft: #fee2e2;
+        --border: #e5e7eb;
+        --text-main: #111827;
+        --text-sub: #6b7280;
+        --bg: #f3f4f6;
+    }
+
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background: radial-gradient(circle at top, #fee2e2 0, #f3f4f6 38%, #f9fafb 100%);
+        color: var(--text-main);
+        margin: 0;
+        padding: 24px 12px 48px;
+    }
+
+    .page-wrapper {
+        max-width: 720px;
+        margin: 0 auto;
+    }
+
+    .card {
+        background: #ffffff;
+        border-radius: 16px;
+        box-shadow: 0 18px 45px rgba(15, 23, 42, 0.12);
+        padding: 28px 32px 32px;
+        position: relative;
+        overflow: hidden;
+        border: 1px solid #fecaca;
+    }
+
+    .card::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(circle at top right, rgba(239, 68, 68, 0.18), transparent 60%);
+        opacity: 0.7;
+        pointer-events: none;
+    }
+
+    .card-inner {
+        position: relative;
+        z-index: 1;
+    }
+
+    .page-title {
+        font-size: 24px;
+        font-weight: 700;
+        text-align: center;
+        margin-bottom: 6px;
+        letter-spacing: 0.03em;
+        color: var(--danger);
+    }
+
+    .page-subtitle {
+        text-align: center;
+        font-size: 14px;
+        color: var(--text-sub);
+        margin-bottom: 20px;
+    }
+
+    .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 14px;
+        color: var(--primary);
+        text-decoration: none;
+        margin-bottom: 18px;
+        padding: 4px 0;
+        border-radius: 999px;
+        transition: 0.18s ease;
+    }
+
+    .back-link::before {
+        content: "←";
+        font-size: 13px;
+    }
+
+    .back-link:hover {
+        color: #1d4ed8;
+        transform: translateX(-1px);
+    }
+
+    .warning-banner {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        padding: 10px 12px;
+        border-radius: 10px;
+        background-color: var(--danger-soft);
+        border: 1px solid #fecaca;
+        font-size: 13px;
+        color: #991b1b;
+        margin-bottom: 14px;
+    }
+
+    .warning-icon {
+        font-size: 18px;
+        line-height: 1;
+        margin-top: 1px;
+    }
+
+    .warning-text strong {
+        font-weight: 700;
+    }
+
+    .info-note {
+        font-size: 12px;
+        color: var(--text-sub);
+        margin-bottom: 10px;
+    }
+
+    .data-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        border-radius: 12px;
+        overflow: hidden;
+        border: 1px solid var(--border);
+        background: #ffffff;
+        margin-bottom: 16px;
+    }
+
+    .data-table th,
+    .data-table td {
+        padding: 10px 12px;
+        font-size: 14px;
+        vertical-align: middle;
+    }
+
+    .data-table tr:nth-child(even) {
+        background-color: #f9fafb;
+    }
+
+    .data-table th {
+        width: 120px;
+        text-align: right;
+        font-weight: 600;
+        color: var(--text-sub);
+        background: #f3f4f6;
+        border-right: 1px solid var(--border);
+    }
+
+    .data-table td {
+        border-top: 1px solid var(--border);
+    }
+
+    .data-table tr:first-child td {
+        border-top: none;
+    }
+
+    .form-actions {
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+        margin-top: 10px;
+    }
+
+    .btn {
+        min-width: 90px;
+        padding: 7px 18px;
+        border-radius: 999px;
+        border: 1px solid transparent;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: transform 0.12s ease, box-shadow 0.12s ease, background-color 0.15s ease, border-color 0.15s ease;
+    }
+
+    .btn-danger {
+        background: var(--danger);
+        color: #ffffff;
+        box-shadow: 0 10px 20px rgba(239, 68, 68, 0.32);
+    }
+
+    .btn-danger:hover {
+        background: #b91c1c;
+        transform: translateY(-1px);
+        box-shadow: 0 12px 26px rgba(185, 28, 28, 0.38);
+    }
+
+    .btn-secondary {
+        background: #ffffff;
+        color: var(--text-main);
+        border-color: var(--border);
+    }
+
+    .btn-secondary:hover {
+        background: #f9fafb;
+        transform: translateY(-1px);
+        box-shadow: 0 6px 16px rgba(15, 23, 42, 0.12);
+    }
+
+    @media (max-width: 600px) {
+        body {
+            padding: 16px 10px 32px;
+        }
+
+        .card {
+            padding: 20px 18px 24px;
+            border-radius: 14px;
+        }
+
+        .data-table th {
+            width: 90px;
+            font-size: 13px;
+        }
+
+        .data-table th,
+        .data-table td {
+            padding: 8px 8px;
+        }
+    }
+</style>
+
+<script>
+    function doublecheck() {
+        return confirm("\n您確定要刪除這筆資料嗎？\n刪除後將無法復原！\n");
+    }
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="page-wrapper">
+    <div class="card">
+        <div class="card-inner">
+            <h1 class="page-title">學生資料管理系統</h1>
+            <p class="page-subtitle">刪除學生資料確認</p>
+
+            <a href="/index/" class="back-link">回首頁</a>
+            {# 若有設定 url name，可改為：href="{% url 'index' %}" #}
+
+            <div class="warning-banner">
+                <div class="warning-icon">⚠️</div>
+                <div class="warning-text">
+                    <strong>注意：</strong>您即將刪除以下學生資料，刪除後無法復原，請再次確認。
+                </div>
+            </div>
+
+            <p class="info-note">以下為將被刪除的資料內容：</p>
+
+            <form action="/delete/{{ obj_data.cID }}/" method="post" onsubmit="return doublecheck();">
+                {% csrf_token %}
+                <table class="data-table">
+                    <tr>
+                        <th>姓名</th>
+                        <td>{{ obj_data.cName }}</td>
+                    </tr>
+                    <tr>
+                        <th>性別</th>
+                        <td>
+                            {% if obj_data.cSex == "M" %}
+                                男
+                            {% elif obj_data.cSex == "F" %}
+                                女
+                            {% else %}
+                                未填寫
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>生日</th>
+                        <td>{{ obj_data.cBirthday|date:'Y-m-d' }}</td>
+                    </tr>
+                    <tr>
+                        <th>信箱</th>
+                        <td>{{ obj_data.cEmail }}</td>
+                    </tr>
+                    <tr>
+                        <th>電話</th>
+                        <td>{{ obj_data.cPhone }}</td>
+                    </tr>
+                    <tr>
+                        <th>地址</th>
+                        <td>{{ obj_data.cAddr }}</td>
+                    </tr>
+                </table>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-danger">確認刪除</button>
+                    <a href="/index/" class="btn btn-secondary" style="text-align:center; line-height:1.4;">
+                        取消返回
+                    </a>
+                    {# 同樣可改為 href="{% url 'index' %}" #}
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
